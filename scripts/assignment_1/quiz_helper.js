@@ -20,20 +20,20 @@ const extractQuestion = (quizContract, receipt) => {
     });
 
     // console.log('LOGS');
-    // console.log(logs);
+    //console.log(logs);
 
     // Find the QuestionAsked event
     const questionEvent = logs.find((log) => log.name === "QuestionAsked");
 
     if (!questionEvent) {
         console.log('Error! Could not find logs.');
-        return { text: false, id: false };
+        return { text: false};
     }
 
     const text = questionEvent.args[1];
-    const id = questionEvent.args[2];
+    const storedAnswer = questionEvent.args[2];
 
-    return { text, id };
+    return { text, storedAnswer };
 };
 
 async function getUserInput(prompt) {

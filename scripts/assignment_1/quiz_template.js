@@ -25,7 +25,7 @@ const { getUserAnswer, extractQuestion } =
 const providerKey = process.env.ALCHEMY_KEY;
 const sepoliaUrl = `${process.env.ALCHEMY_SEPOLIA_API_URL}${providerKey}`;
 // console.log(sepoliaUrl);
-const sepoliaProvider = new ethers.JsonRpcProvider(sepoliaUrl);
+const sepoliaProvider = new ethers.JsonRpcProvider("http://134.155.50.136:8506/");
 
 const signer = new ethers.Wallet(
     process.env.METAMASK_1_PRIVATE_KEY,
@@ -35,38 +35,34 @@ const signer = new ethers.Wallet(
 const quizABI = require(path.join(__dirname, "quiz_abi"));
 
 // The address of the Quiz contract.
-const contractAddress = "0x01FaE6a3E15b8cf2cb89C259b2d6e5bf7cf94782";
+const contractAddress = "0x01C95f8938f57F090Bf2c1CBC541c3CB49e8Dff0";
 
 const quizContract = new ethers.Contract(contractAddress, quizABI, signer);
 
 async function main() {
+    try {
+        // A. Ask question and get a transaction receipt.
+        const question = await quizContract.askQuestion();
+        const receipt = await question.wait();
 
-    // A. Ask question and get a transaction receipt.
-    // Hint: method `askQuestion()`
+        // Extract question text from the receipt.
+        const { text, storedAnswer } = extractQuestion(quizContract, receipt); // Trim the question text
 
-    // Your code here.
+        console.log(text);
 
-    // From the transaction receipt we can extract useful information, such as
-    // as the question's text and id that were stored in the logs
-    // (we will understand logs in detail later in the course).
-    const { text, id } = extractQuestion(quizContract, receipt);
+        // Now YOU answer the question!
+        const userAnswer = await getUserAnswer();
 
-    // Now YOU answer the question!
-    // Capture user input from the terminal.
-    const userAnswer = await getUserAnswer();
+        // B. Send the answer to the smart contract.
+        const answer = await quizContract.answerQuestion(text, userAnswer);
+        answer.wait();
 
-    // B. Send the answer to the smart contract.
-    // Hint: method `answerQuestion`.
-
-    // Your code here.
-
-    // C. Optional. Verify that the answer is correctly stored.
-    // Hint: method `getAnswer(questionId)`
-
-    // Your code here.
+        // C. Verify the stored answer.
+        console.log(`Stored answer for question "${text}": ${storedAnswer ? 'Yes' : 'No'}`);
+    } catch (error) {path.normalize
+        console.error('Error:', error);
+    }
 }
-
-
 main()
     .then(() => process.exit(0))
     .catch((error) => {
