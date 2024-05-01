@@ -19,11 +19,13 @@ contracts/assignment_2/Assignment2.sol
 scripts/assignment_2/interact2.js
 scripts/assignment_2/interact.js
 
-assignment_3/Token.sol
+# assignment_3/Token.sol
 # assignment_4
 # validators/assignment_4
 .addresses.json
 # Assignment4Exchange.sol
+
+val3_abi.json
 
 scripts/assignment_4/interact*
 # deploy_unima.js
@@ -50,4 +52,11 @@ now_abi.json
 send_now_coins*
 send_now_tokens*
 deploy_my_quiz.js
-Token.sol
+
+myquiz2*
+
+get_*
+
+val2*
+
+ERC20*
